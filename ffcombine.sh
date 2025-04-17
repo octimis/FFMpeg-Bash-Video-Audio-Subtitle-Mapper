@@ -227,12 +227,12 @@ getFileType () {
           audFile+=( '-i' "$1" )
           ;;
       'subtitle')
-          subtitleFile="$1"
-          subtitleFormat=$(\
-                           ffprobe \
-                           -v error \
-                           -show_entries stream=codec_name \
-                           -of csv=p=0 "$1")
+         subtitleFile="$1"
+         subtitleFormat=$(\
+                          ffprobe \
+                          -v error \
+                          -show_entries stream=codec_name \
+                          -of csv=p=0 "$1")
          if [[ $(basename "${1##*.}") == 'sub' ]]; then
             # Assoc arrays can't store array, hence string
             subFile_Syntax="-f vobsub -sub_name \""$1"\""
