@@ -7,7 +7,7 @@
 # Only output final command; placed after options (getopts)
 [[ "$@" =~ "dryrun" ]] && dryRun=true || dryRun=false
 
-vidCodec=""
+vidCodec=""			# Not used
 audCodec=""
 subtitleFile=""
 subtitleFormat=""
@@ -196,8 +196,10 @@ getFileType () {
          vidCodec=$(\
                     ffprobe \
                     -v error \
+                    -select_streams v:0 \
                     -show_entries stream=codec_name \
                     -of csv=p=0 "$1")
+
          vidFile="$1"
          # How many other non-video streams are in video file
          #    Required for adjusting subtitle/audio metadata
@@ -222,6 +224,7 @@ getFileType () {
           audCodec=$(\
                      ffprobe \
                      -v error \
+                     -select_streams a:0 \
                      -show_entries stream=codec_name \
                      -of csv=p=0 "$1")
           audFile+=( '-i' "$1" )
@@ -231,6 +234,7 @@ getFileType () {
          subtitleFormat=$(\
                           ffprobe \
                           -v error \
+                          -select_streams s:0 \
                           -show_entries stream=codec_name \
                           -of csv=p=0 "$1")
          if [[ $(basename "${1##*.}") == 'sub' ]]; then
